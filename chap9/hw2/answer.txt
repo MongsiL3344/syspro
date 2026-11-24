@@ -1,0 +1,49 @@
+과제2 - 작업제어 실습
+
+1. (echo START1; sleep 10; echo DONE1) &
+출력결과
+[1] 6029
+START1
+> DONE1
+
+설명
+괄호로 묶은 명령은 서브쉘에서 차례로 실행
+끝에 &가 있어서 백그라운드 작업으로 실행되고 작업번호와 PID를 즉시 반환한다
+10초가 지나면 DONE1가 출력되며 백그라운드 작업 완료를 표시함
+
+2. (echo START2; sleep 10; echo DONE2) &
+출력결과
+[2] 6222
+START2
+
+> DONE1
+DONE2
+
+설명
+1번과 같은 방식으로 서브쉘 백그라운드 실행
+둘 다 백그라운드 작업이므로 작업번호가 1,2번이 할당되고 PID가 다름
+두 명령 모두 실행한 이후에 10초가 지나면 완료 알림이 표시되므로 두개가 동시에 백그라운드에서 돌아가고 있다는것을 알 수 있음
+
+3. kill -KILL 첫 번째 프로세스
+출력결과
+[1]+  Killed                  ( echo START2; sleep 10; echo DONE2 )
+
+설명
+kill -KILL [PID]는 해당 프로세스에 SIGKILL 시그널을 보냄
+이 시그널을 받으면 해당 프로세스는 강제종료됨
+
+4. kill -STOP 첫 번째 프로세스
+출력결과 없음
+
+설명
+kill -STOP은 시그널 전달이 성공하면 아무것도 반환하지 않음
+
+5. kill -CONT 첫 번째 프로세스
+출력결과
+DONE2
+[1]+  Done                    ( echo START2; sleep 100; echo DONE2 )
+
+설명
+kill -CONT [PID}는 해당 프로세스에 SIGCONT 시그널을 보냄
+정지된 프로세스를 다시 실행시키는 시그널
+4번에서 정지한 프로세스에 실행한 결과는 위와 같고 KILL된 프로세스에 보내면 No such process 오류
